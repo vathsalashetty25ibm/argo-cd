@@ -3,10 +3,13 @@ package cache
 import (
 	"context"
 	"fmt"
+	"math"
 	"os"
 	"reflect"
 	"sync"
 	"time"
+
+	"github.com/argoproj/argo-cd/v2/util/env"
 
 	clustercache "github.com/argoproj/gitops-engine/pkg/cache"
 	"github.com/argoproj/gitops-engine/pkg/health"
@@ -37,6 +40,8 @@ const (
 var (
 	// K8SClusterResyncDuration controls the duration of cluster cache refresh
 	K8SClusterResyncDuration = 12 * time.Hour
+	// K8SListLimit is the number of concurrent k8s list requests
+	K8SListLimit = env.ParseNumFromEnv("ARGOCD_K8S_LIST_LIMIT", 50, 0, math.MaxInt32)
 )
 
 func init() {
@@ -115,9 +120,8 @@ func NewLiveStateCache(
 		kubectl:         kubectl,
 		settingsMgr:     settingsMgr,
 		metricsServer:   metricsServer,
-		// The default limit of 50 is chosen based on experiments.
-		listSemaphore: semaphore.NewWeighted(50),
-		clusterFilter: clusterFilter,
+		listSemaphore:   semaphore.NewWeighted(int64(K8SListLimit)),
+		clusterFilter:   clusterFilter,
 	}
 }
 
