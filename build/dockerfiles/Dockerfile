@@ -12,14 +12,6 @@ RUN go mod download
 #RUN go mod download
 
 # Perform the build
-COPY . .
-RUN make argocd-all
-
-ARG BUILD_ALL_CLIS=true
-RUN if [ "$BUILD_ALL_CLIS" = "true" ] ; then \
-    make BIN_NAME=argocd-linux-ppc64le GOOS=linux argocd-all && \
-    make BIN_NAME=argocd-linux-ppc64le.exe GOOS=linux argocd-all \
-    ; fi
 
 
   
@@ -36,7 +28,7 @@ RUN apt-get update && apt-get install -y \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
     
-WORKDIR /go/src/github.com/vathsalashetty96/argo-cd
+WORKDIR /go/src/github.com/vathsalashetty25ibm/argo-cd
 
 
 
