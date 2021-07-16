@@ -1,7 +1,6 @@
 FROM golang:1.14.12-buster as argocd-build
 
-WORKDIR /go/src/github.com/vathsalashetty96/argo-cd
-RUN go get golang.org/x/tools/cmd/goimports
+WORKDIR /go/src/github.com/vathsalashetty25ibm/argo-cd
 
 COPY go.mod go.mod
 COPY go.sum go.sum
